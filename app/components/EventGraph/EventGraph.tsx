@@ -20,7 +20,7 @@ const EventGraph: React.FC<EventGraphProps> = ({eventData}) => {
 
   const hours = Array.from({ length: 24 }, (_, i) => ({
     hour: i.toString().padStart(2, '0'),  // Format the hour as a two-digit string
-    event: undefined,
+    event: 'down',
     hasVerticalLine: false,
   }));
 
@@ -34,49 +34,94 @@ console.log(eventItems,'event item')
 
 
 
-  const generateDisplayItems = (events: { timestamp: string, event: string }[]): DisplayItem[] => {
-    const displayItems: DisplayItem[] = [...hours];
+//   const generateDisplayItems = (events: { timestamp: string, event: string }[]): DisplayItem[] => {
+//     const displayItems: DisplayItem[] = [...hours];
 
 
     
-    events.forEach((eventItem, _index) => {
-      const eventHour = new Date(parseInt(eventItem.timestamp)).getHours();
-      displayItems[eventHour].event = eventItem.event;})
+//     events.forEach((eventItem, _index) => {
+//       const eventHour = new Date(parseInt(eventItem.timestamp)).getHours();
+//       displayItems[eventHour].event = eventItem.event;})
 
-    for (let i = 1; i < displayItems.length; i++) {
-      if (!displayItems[i].event) {
-        displayItems[i].event = displayItems[i - 1].event;
-        displayItems[i].hasVerticalLine = false;
-      }
-    }
+//     for (let i = 1; i < displayItems.length; i++) {
+//       if (!displayItems[i].event) {
+//         displayItems[i].event = displayItems[i - 1].event;
+//         displayItems[i].hasVerticalLine = false;
+//       }
+//     }
 
-    events.forEach((eventItem, index) => {
-      const eventHour = new Date(parseInt(eventItem.timestamp)).getHours();
-      displayItems[eventHour].event = eventItem.event;
+//     events.forEach((eventItem, index) => {
+//       const eventHour = new Date(parseInt(eventItem.timestamp)).getHours();
+//       displayItems[eventHour].event = eventItem.event;
 
- if(index>0){
-        const previousEvent = events[index - 1];
-        const previousHour = new Date(parseInt(previousEvent.timestamp)).getHours();
-        console.log(previousEvent.event , eventItem.event ,index,'condition')
+//  if(index>0){
+//         const previousEvent = events[index - 1];
+//         const previousHour = new Date(parseInt(previousEvent.timestamp)).getHours();
+//         console.log(previousEvent.event , eventItem.event ,index,'condition')
 
 
 
-        if ((previousEvent.event === 'up' && eventItem.event === 'down') ||
-          (previousEvent.event === 'down' && eventItem.event === 'up')) {
+//         if ((previousEvent.event === 'up' && eventItem.event === 'down') ||
+//           (previousEvent.event === 'down' && eventItem.event === 'up')) {
        
-            displayItems[previousHour].event = eventItem.event;
-          displayItems[previousHour].hasVerticalLine = true;
-        }}
+//             displayItems[previousHour].event = eventItem.event;
+//           displayItems[previousHour].hasVerticalLine = true;
+//           console.log(  displayItems[previousHour],index,'indexing last item')
+
+//         }}
+
+
+
+
       
-    });
+//     });
 
 
 
-    return displayItems;
-  };
+//     return displayItems;
+//   };
 
   
 
+const generateDisplayItems = (events: { timestamp: string; event: string }[]): DisplayItem[] => {
+  const displayItems: DisplayItem[] = [...hours];
+
+  // Loop through each hour
+  for (let hour = 0; hour < displayItems.length; hour++) {
+    const currentHour = displayItems[hour];
+    let previousEvent = events.find(event => {
+      const previousHour = new Date(parseInt(event.timestamp)).getHours();
+      return previousHour === hour - 1;
+    });
+
+    // Check for events matching the current hour
+    events.forEach(eventItem => {
+      const eventHour = new Date(parseInt(eventItem.timestamp)).getHours();
+      if (eventHour === hour) {
+        currentHour.event = eventItem.event;
+
+console.log(displayItems[hour-1],eventItem,currentHour,'##########')
+
+        // Check for vertical line if this event creates a state change
+        if (((displayItems[hour-1].event === 'up' && eventItem.event === 'down') || (displayItems[hour-1].event  === 'down' && eventItem.event === 'up'))) {
+        if(displayItems[hour-1].event === 'up')
+        {  displayItems[hour-1].hasVerticalLine = true;}
+        else{
+          displayItems[hour].hasVerticalLine = true;
+        }
+        }
+        previousEvent = eventItem; // Update previousEvent for next iteration
+      }
+    });
+
+    // Check for missing events (inherit from previous hour)
+    if (hour > 0 && !currentHour.event) {
+      currentHour.event = displayItems[hour - 1].event;
+    }
+  }
+
+  return displayItems;
+};
 
   const displayItems = generateDisplayItems(eventItems);
 
@@ -106,8 +151,8 @@ console.log(eventItems,'event item')
         {item.hasVerticalLine && (
           <View style={[item.event === 'up' && $verticalUpLine, item.event === 'down' && $verticalDownLine]} />
         )}
-        {/* {displayItems[parseInt(item.hour)-1]?.event==='down'&&displayItems[parseInt(item.hour)]?.event==='up'&&displayItems[parseInt(item.hour)+1]?.event==='down'&&<View style={$supportLineLeft}/>} */}
-        {/* {displayItems[parseInt(item.hour)-1]?.event==='up'&&displayItems[parseInt(item.hour)]?.event==='down'&&displayItems[parseInt(item.hour)+1]?.event==='up'&&<View style={$supportLineRight}/>} */}
+        {displayItems[parseInt(item.hour)-1]?.event==='down'&&displayItems[parseInt(item.hour)]?.event==='up'&&displayItems[parseInt(item.hour)+1]?.event==='down'&&<View style={$supportLineLeft}/>}
+        {displayItems[parseInt(item.hour)-1]?.event==='up'&&displayItems[parseInt(item.hour)]?.event==='down'&&displayItems[parseInt(item.hour)+1]?.event==='up'&&<View style={$supportLineRight}/>}
 
       </View>
     )
@@ -224,9 +269,9 @@ const $verticalUpLine: ViewStyle = {
   position: 'absolute',
   top: '25%',
   minWidth: 1,
-  left:0,
-  borderLeftWidth: 2,
-  // borderRightWidth: 2,
+  right:0,
+  borderLeftWidth: 1,
+  borderRightWidth: 1,
   borderColor: '#5d80cd',
   height: '50%',
 };
@@ -236,9 +281,9 @@ const $verticalDownLine: ViewStyle = {
   bottom: '25%',
   minWidth: 1,
   right:0,
-  // borderLeftWidth: 2,
+  borderLeftWidth: 1,
   borderColor: '#5d80cd',
-  borderRightWidth: 2,
+  borderRightWidth: 1,
   height: '50%',
 };
 
