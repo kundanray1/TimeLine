@@ -7,22 +7,61 @@ interface EventGraphProps {
   eventData: Record<string, string>;
 }
 
-interface DisplayItem {
+export interface DisplayItem {
   hour: string;
   event?: string;
   hasVerticalLine?: boolean;
 }
 
+const hours = Array.from({ length: 24 }, (_, i) => ({
+  hour: i.toString().padStart(2, '0'),  // Format the hour as a two-digit string
+  event: 'down',
+  hasVerticalLine: false,
+}));
+export const generateDisplayItems = (events: { timestamp: string; event: string }[]): DisplayItem[] => {
+  const displayItems: DisplayItem[] = [...hours];
+
+  // Loop through each hour
+  for (let hour = 0; hour < displayItems.length; hour++) {
+    const currentHour = displayItems[hour];
+    // let previousEvent = events.find(event => {
+    //   const previousHour = new Date(parseInt(event.timestamp)).getHours();
+    //   return previousHour === hour - 1;
+    // });
+
+    // Check for events matching the current hour
+    events.forEach(eventItem => {
+      const eventHour = new Date(parseInt(eventItem.timestamp)).getHours();
+      if (eventHour === hour) {
+        currentHour.event = eventItem.event;
+
+console.log(displayItems[hour-1],eventItem,currentHour,'##########')
+
+        // Check for vertical line if this event creates a state change
+        if (((displayItems[hour-1].event === 'up' && eventItem.event === 'down') || (displayItems[hour-1].event  === 'down' && eventItem.event === 'up'))) {
+        if(displayItems[hour-1].event === 'up')
+        {  displayItems[hour-1].hasVerticalLine = true;}
+        else{
+          displayItems[hour].hasVerticalLine = true;
+        }
+        }
+        // previousEvent = eventItem; // Update previousEvent for next iteration
+      }
+    });
+
+    // Check for missing events (inherit from previous hour)
+    if (hour > 0 && !currentHour.event) {
+      currentHour.event = displayItems[hour - 1].event;
+    }
+  }
+
+  return displayItems;
+};
 const EventGraph: React.FC<EventGraphProps> = ({eventData}) => {
   // const eventData = useSelector((state: RootState) => state.event.events);
   const [currentPage, setCurrentPage] = useState<number>(0);
   const pageSize = 20;
 
-  const hours = Array.from({ length: 24 }, (_, i) => ({
-    hour: i.toString().padStart(2, '0'),  // Format the hour as a two-digit string
-    event: 'down',
-    hasVerticalLine: false,
-  }));
 
   const eventItems = Object.keys(eventData).map(timestamp => ({
     timestamp,
@@ -83,45 +122,7 @@ console.log(eventItems,'event item')
 
   
 
-const generateDisplayItems = (events: { timestamp: string; event: string }[]): DisplayItem[] => {
-  const displayItems: DisplayItem[] = [...hours];
 
-  // Loop through each hour
-  for (let hour = 0; hour < displayItems.length; hour++) {
-    const currentHour = displayItems[hour];
-    let previousEvent = events.find(event => {
-      const previousHour = new Date(parseInt(event.timestamp)).getHours();
-      return previousHour === hour - 1;
-    });
-
-    // Check for events matching the current hour
-    events.forEach(eventItem => {
-      const eventHour = new Date(parseInt(eventItem.timestamp)).getHours();
-      if (eventHour === hour) {
-        currentHour.event = eventItem.event;
-
-console.log(displayItems[hour-1],eventItem,currentHour,'##########')
-
-        // Check for vertical line if this event creates a state change
-        if (((displayItems[hour-1].event === 'up' && eventItem.event === 'down') || (displayItems[hour-1].event  === 'down' && eventItem.event === 'up'))) {
-        if(displayItems[hour-1].event === 'up')
-        {  displayItems[hour-1].hasVerticalLine = true;}
-        else{
-          displayItems[hour].hasVerticalLine = true;
-        }
-        }
-        previousEvent = eventItem; // Update previousEvent for next iteration
-      }
-    });
-
-    // Check for missing events (inherit from previous hour)
-    if (hour > 0 && !currentHour.event) {
-      currentHour.event = displayItems[hour - 1].event;
-    }
-  }
-
-  return displayItems;
-};
 
   const displayItems = generateDisplayItems(eventItems);
 
