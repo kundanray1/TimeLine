@@ -9,9 +9,8 @@ interface IInitialState {
 
 const initialState: IInitialState = {
      events : {
-        1718440094000: "up",
-        1718451014000: "down",
-        1718463600000: "up",
+       
+   
         1718493120000: "down",
         1718514720000: "up",
         1718526000000: "down",
@@ -19,6 +18,7 @@ const initialState: IInitialState = {
         1718548800000: "down",
         1718560200000: "up",
         1718571600000: "down",
+        1718581600000: "up",
       }
       
 
