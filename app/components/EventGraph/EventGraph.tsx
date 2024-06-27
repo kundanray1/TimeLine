@@ -1,12 +1,10 @@
-import { RootState } from 'app/services/root';
 import { colors, spacing } from 'app/theme';
-import React, { useCallback, useState, useEffect } from 'react';
+import React, { useCallback, useState, memo } from 'react';
 import { View, FlatList, ListRenderItem, ViewStyle } from 'react-native';
-import { useSelector } from 'react-redux';
 import { Text } from '../Text';
 
 interface EventGraphProps {
-  events?: Record<string, string>;
+  eventData: Record<string, string>;
 }
 
 interface DisplayItem {
@@ -15,8 +13,8 @@ interface DisplayItem {
   hasVerticalLine?: boolean;
 }
 
-const EventGraph: React.FC<EventGraphProps> = () => {
-  const eventData = useSelector((state: RootState) => state.event.events);
+const EventGraph: React.FC<EventGraphProps> = ({eventData}) => {
+  // const eventData = useSelector((state: RootState) => state.event.events);
   const [currentPage, setCurrentPage] = useState<number>(0);
   const pageSize = 20;
 
@@ -41,7 +39,7 @@ console.log(eventItems,'event item')
 
 
     
-    events.forEach((eventItem, index) => {
+    events.forEach((eventItem, _index) => {
       const eventHour = new Date(parseInt(eventItem.timestamp)).getHours();
       displayItems[eventHour].event = eventItem.event;})
 
@@ -61,9 +59,7 @@ console.log(eventItems,'event item')
         const previousHour = new Date(parseInt(previousEvent.timestamp)).getHours();
         console.log(previousEvent.event , eventItem.event ,index,'condition')
 
-if(index==10){
-  console.log(previousEvent , eventItem,'index 10th issue' )
-}
+
 
         if ((previousEvent.event === 'up' && eventItem.event === 'down') ||
           (previousEvent.event === 'down' && eventItem.event === 'up')) {
@@ -87,15 +83,15 @@ if(index==10){
   const renderItem: ListRenderItem<DisplayItem> = ({ item }) => {
     console.log(item, 'items')
     return (
-      <View style={{ height: 300, width: 'auto' }}>
-        <View style={{ height: spacing.l, left: -10 }}>
+      <View style={$colContainer}>
+        <View style={$hoursContainer}>
           <Text>{item.hour}</Text>
         </View>
         <View style={[$event, $up]}>
           <View style={$upContainer}>
             <View style={$highlight} />
             <View style={$centerDashStyle} />
-            {item.event === 'up' && <Text>{item.event}</Text>}
+            {/* {item.event === 'up' && <Text>{item.event}</Text>} */}
 
           </View>
         </View>
@@ -103,15 +99,15 @@ if(index==10){
           <View style={$downContainer}>
             <View style={$highlight} />
             <View style={$centerDashStyle} />
-            {item.event === 'down' && <Text>{item.event}</Text>}
+            {/* {item.event === 'down' && <Text>{item.event}</Text>} */}
           </View>
         </View>
         <View style={item.event === 'up' ? $upLine : $downLine} />
         {item.hasVerticalLine && (
           <View style={[item.event === 'up' && $verticalUpLine, item.event === 'down' && $verticalDownLine]} />
         )}
-        {displayItems[parseInt(item.hour)-1]?.event==='down'&&displayItems[parseInt(item.hour)]?.event==='up'&&displayItems[parseInt(item.hour)+1]?.event==='down'&&<View style={$supportLineLeft}/>}
-        {displayItems[parseInt(item.hour)-1]?.event==='up'&&displayItems[parseInt(item.hour)]?.event==='down'&&displayItems[parseInt(item.hour)+1]?.event==='up'&&<View style={$supportLineRight}/>}
+        {/* {displayItems[parseInt(item.hour)-1]?.event==='down'&&displayItems[parseInt(item.hour)]?.event==='up'&&displayItems[parseInt(item.hour)+1]?.event==='down'&&<View style={$supportLineLeft}/>} */}
+        {/* {displayItems[parseInt(item.hour)-1]?.event==='up'&&displayItems[parseInt(item.hour)]?.event==='down'&&displayItems[parseInt(item.hour)+1]?.event==='up'&&<View style={$supportLineRight}/>} */}
 
       </View>
     )
@@ -228,7 +224,7 @@ const $verticalUpLine: ViewStyle = {
   position: 'absolute',
   top: '25%',
   minWidth: 1,
-  right:0,
+  left:0,
   borderLeftWidth: 2,
   // borderRightWidth: 2,
   borderColor: '#5d80cd',
@@ -278,12 +274,17 @@ const $supportLineRight:ViewStyle={
   position: 'absolute',
   bottom: '25%',
   minWidth: 1,
-  right:0,
+  left:0,
   // borderLeftWidth: 2,
   borderColor: '#5d80cd',
   borderRightWidth: 2,
   height: '50%',
 }
 
-export default EventGraph;
+const $colContainer:ViewStyle={ height: 300, width: 'auto' }
+
+const $hoursContainer:ViewStyle={ height: spacing.lg, left: -10 }
+export default memo(EventGraph);
+
+
 

@@ -4,9 +4,11 @@ import {  ViewStyle } from "react-native"
 
 
 import { AppStackScreenProps } from "../../navigators"
-import { colors, spacing } from "../../theme"
+import {  spacing } from "../../theme"
 import { Screen } from "app/components"
 import EventGraph from "app/components/EventGraph/EventGraph"
+import { useSelector } from "react-redux"
+import { RootState } from "app/services/root"
 
 
 
@@ -29,10 +31,11 @@ export const WelcomeScreen: FC<WelcomeScreenProps> = observer(function WelcomeSc
   //   initialData:[]
 
   // })
+  const eventData = useSelector((state: RootState) => state.event.events);
 
   return (
     <Screen style={$container} safeAreaEdges={['top']} preset="fixed">
-<EventGraph/>
+<EventGraph eventData={eventData}/>
     </Screen>
   )
 })

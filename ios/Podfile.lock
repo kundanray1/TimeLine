@@ -1208,6 +1208,27 @@ PODS:
     - React-debug
   - react-native-safe-area-context (4.10.1):
     - React-Core
+  - react-native-slider (4.5.2):
+    - DoubleConversion
+    - glog
+    - hermes-engine
+    - RCT-Folly (= 2024.01.01.00)
+    - RCTRequired
+    - RCTTypeSafety
+    - React-Codegen
+    - React-Core
+    - React-debug
+    - React-Fabric
+    - React-featureflags
+    - React-graphics
+    - React-ImageManager
+    - React-NativeModulesApple
+    - React-RCTFabric
+    - React-rendererdebug
+    - React-utils
+    - ReactCommon/turbomodule/bridging
+    - ReactCommon/turbomodule/core
+    - Yoga
   - React-nativeconfig (0.74.1)
   - React-NativeModulesApple (0.74.1):
     - glog
@@ -1439,6 +1460,8 @@ PODS:
     - React-utils (= 0.74.1)
   - RNCAsyncStorage (1.23.1):
     - React-Core
+  - RNDateTimePicker (8.1.1):
+    - React-Core
   - RNFlashList (1.6.4):
     - React-Core
   - RNGestureHandler (2.16.2):
@@ -1558,6 +1581,7 @@ DEPENDENCIES:
   - React-logger (from `../node_modules/react-native/ReactCommon/logger`)
   - React-Mapbuffer (from `../node_modules/react-native/ReactCommon`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
+  - "react-native-slider (from `../node_modules/@react-native-community/slider`)"
   - React-nativeconfig (from `../node_modules/react-native/ReactCommon`)
   - React-NativeModulesApple (from `../node_modules/react-native/ReactCommon/react/nativemodule/core/platform/ios`)
   - React-perflogger (from `../node_modules/react-native/ReactCommon/reactperflogger`)
@@ -1582,6 +1606,7 @@ DEPENDENCIES:
   - React-utils (from `../node_modules/react-native/ReactCommon/react/utils`)
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
   - "RNCAsyncStorage (from `../node_modules/@react-native-async-storage/async-storage`)"
+  - "RNDateTimePicker (from `../node_modules/@react-native-community/datetimepicker`)"
   - "RNFlashList (from `../node_modules/@shopify/flash-list`)"
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
   - RNReanimated (from `../node_modules/react-native-reanimated`)
@@ -1688,6 +1713,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon"
   react-native-safe-area-context:
     :path: "../node_modules/react-native-safe-area-context"
+  react-native-slider:
+    :path: "../node_modules/@react-native-community/slider"
   React-nativeconfig:
     :path: "../node_modules/react-native/ReactCommon"
   React-NativeModulesApple:
@@ -1736,6 +1763,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon"
   RNCAsyncStorage:
     :path: "../node_modules/@react-native-async-storage/async-storage"
+  RNDateTimePicker:
+    :path: "../node_modules/@react-native-community/datetimepicker"
   RNFlashList:
     :path: "../node_modules/@shopify/flash-list"
   RNGestureHandler:
@@ -1795,6 +1824,7 @@ SPEC CHECKSUMS:
   React-logger: 7e7403a2b14c97f847d90763af76b84b152b6fce
   React-Mapbuffer: 11029dcd47c5c9e057a4092ab9c2a8d10a496a33
   react-native-safe-area-context: dcab599c527c2d7de2d76507a523d20a0b83823d
+  react-native-slider: ce295d2bf830a7990af05b0bd70ab28c133e230c
   React-nativeconfig: b0073a590774e8b35192fead188a36d1dca23dec
   React-NativeModulesApple: df46ff3e3de5b842b30b4ca8a6caae6d7c8ab09f
   React-perflogger: 3d31e0d1e8ad891e43a09ac70b7b17a79773003a
@@ -1819,6 +1849,7 @@ SPEC CHECKSUMS:
   React-utils: 3285151c9d1e3a28a9586571fc81d521678c196d
   ReactCommon: f42444e384d82ab89184aed5d6f3142748b54768
   RNCAsyncStorage: 826b603ae9c0f88b5ac4e956801f755109fa4d5c
+  RNDateTimePicker: 430174392d275f0ffefb627d04f0f8677f667fed
   RNFlashList: b521ebdd7f9352673817f1d98e8bdc0c8cf8545b
   RNGestureHandler: 2282cfbcf86c360d29f44ace393203afd5c6cff7
   RNReanimated: 35f9ac9c3ac42d0497ebd1cce5c39d7687a8493e

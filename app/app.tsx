@@ -31,11 +31,10 @@ import * as storage from "./utils/storage"
 import { customFontsToLoad } from "./theme"
 import Config from "./config"
 import { GestureHandlerRootView } from "react-native-gesture-handler"
-import {    NativeModules, Platform, ViewStyle } from "react-native"
+import {    ViewStyle } from "react-native"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { store } from "./services/root"
 import { Provider } from "react-redux"
-
 export const NAVIGATION_PERSISTENCE_KEY = "NAVIGATION_STATE"
 
 // if (__DEV__ && Platform.OS === "ios") {
@@ -151,7 +150,9 @@ function App(props: AppProps) {
   )
 }
 
-export default App
+// export default App
+export { default } from '../.storybook';
+
 
 const $container: ViewStyle = {
   flex: 1,
